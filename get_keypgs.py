@@ -18,8 +18,8 @@ options.add_argument("--start-maximized")
 delay = 5 #seconds
 DRIVER_LOCATION = './chromedriver_hex.exe'
 PGS_URL = 'https://manage.pgsharp.com/cart.php?a=add&pid=2'
-email = '@gmail.com'
-password = ''
+email_String = '@gmail.com'
+password_String = ''
 
 
 def checkExistsCheckOut(browser):
@@ -47,7 +47,7 @@ def clickCheckout(browser):
     lastname.send_keys('Pham')
     #email
     email = browser.find_element_by_name('email')
-    email.send_keys(email)
+    email.send_keys(email_String)
     #fone
     phonenumber = browser.find_element_by_name('phonenumber')
     phonenumber.send_keys('773122123')
@@ -65,10 +65,10 @@ def clickCheckout(browser):
     postcode.send_keys('700000')
     #Password
     password = browser.find_element_by_name('password')
-    password.send_keys(password)
+    password.send_keys(password_String)
     #Repeat pw
     password2 = browser.find_element_by_name('password2')
-    password2.send_keys(password)
+    password2.send_keys(password_String)
     #Optional company
     companyname = browser.find_element_by_name('companyname')
     companyname.send_keys('TMA')
