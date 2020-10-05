@@ -7,8 +7,7 @@ import time
 
 # Set environment variables
 #os.environ['webdriver.chrome.driver'] = 'F:\DevTools\chromedriver_win32_85\chromedriver.exe'
-#opts = Options()
-#opts.set_headless()
+
 options = webdriver.ChromeOptions()
 options.add_argument("--start-maximized")
 
@@ -18,8 +17,7 @@ browser = webdriver.Chrome(executable_path='F:\DevTools\chromedriver_win32_85\ch
 while True:
     time.sleep(1)
     result = browser.get('https://manage.pgsharp.com/cart.php?a=add&pid=2')
-    #print(browser.current_url)
-    #browser.title
+
     try:
         if "429" in browser.title:
             browser.refresh
