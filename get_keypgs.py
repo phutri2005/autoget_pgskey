@@ -62,26 +62,11 @@ def clickCheckout(browser):
     browser.minimize_window()
     browser.maximize_window()
 
+    
+#MAIN LOGIN
 
 while False == checkExistsCheckOut(browser):
     time.sleep(1)
     result = browser.get('https://manage.pgsharp.com/cart.php?a=add&pid=2')
-    try:
-        browser.refresh
-        #if "429" in browser.title:
-        #    browser.refresh
-        #elif "Shopping Cart" in browser.title:
-        #    element = browser.find_element_by_xpath('//*[@id="order-boxes"]/div/h1')
-        #   print(element.text)
-        #   browser.refresh
-        #if "Out of Stock" in browser.find_element_by_xpath('//*[@id="order-boxes"]/div/h1').text:
-        #    element = browser.find_element_by_xpath('//*[@id="order-boxes"]/div/h1')
-        #   print(element.text)
-        #    browser.refresh
-        #else:
-        #    clickCheckout(browser)
-        #    break
-    except NoSuchElementException:
-        clickCheckout(browser)
-        break
+    
 clickCheckout(browser)
