@@ -7,17 +7,15 @@ import time
 
 # Set environment variables
 #os.environ['webdriver.chrome.driver'] = 'F:\DevTools\chromedriver_win32_85\chromedriver.exe'
-
 options = webdriver.ChromeOptions()
 options.add_argument("--start-maximized")
 
 
-browser = webdriver.Chrome(executable_path='F:\DevTools\chromedriver_win32_85\chromedriver.exe', options=options)
-#browser = webdriver.Chrome(options=opts)
+browser = webdriver.Chrome(executable_path='./chromedriver_hex.exe', options=options)
+
 while True:
     time.sleep(1)
     result = browser.get('https://manage.pgsharp.com/cart.php?a=add&pid=2')
-
     try:
         if "429" in browser.title:
             browser.refresh
@@ -28,7 +26,6 @@ while True:
         elif "Out of Stock" in browser.find_element_by_xpath('//*[@id="order-boxes"]/div/h1').text:
         #    element = browser.find_element_by_xpath('//*[@id="order-boxes"]/div/h1')
         #   print(element.text)
-            #browser.switch_to.window(browser.current_window_handle)
             browser.refresh
         else:
             browser.switch_to.window(browser.current_window_handle)
