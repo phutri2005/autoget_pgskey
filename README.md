@@ -11,3 +11,7 @@ Safari:	https://webkit.org/blog/6900/webdriver-support-in-safari-10/
 # run python script with python 
 Change line browser = webdriver.Chrome(executable_path='F:\DevTools\chromedriver_win32_85\chromedriver.exe', options=options)
 with correct url
+
+
+# ref
+https://selenium-python.readthedocs.io/installation.html
