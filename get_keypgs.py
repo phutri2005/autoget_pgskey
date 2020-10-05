@@ -3,14 +3,24 @@ from selenium.webdriver.firefox.options import Options
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import ActionChains
 
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import TimeoutException
 
 import os
 import time
 
 # Set environment variables
-#os.environ['webdriver.chrome.driver'] = 'F:\DevTools\chromedriver_win32_85\chromedriver.exe'
+#os.environ['webdriver.chrome.driver'] = 'F:\chromedriver_win32_85\chromedriver.exe'
 options = webdriver.ChromeOptions()
 options.add_argument("--start-maximized")
+delay = 5 #seconds
+DRIVER_LOCATION = './chromedriver_hex.exe'
+PGS_URL = 'https://manage.pgsharp.com/cart.php?a=add&pid=2'
+email = '@gmail.com'
+password = ''
+
 
 def checkExistsCheckOut(browser):
     try:
@@ -23,6 +33,12 @@ def clickCheckout(browser):
     #ActionChains(browser).click(browser.find_element_by_xpath('//*[@id="checkout"]')).perform()
     #browser.find_element_by_link_text('Checkout').click()
     browser.find_element_by_partial_link_text('Checkout').click()
+
+    try:
+        myElem = WebDriverWait(browser, delay).until(EC.presence_of_element_located((By.NAME, 'firstname')))
+        print("Checkout page is ready!")
+    except TimeoutException:
+        print("Load checkout page took too long")
     #firstname
     firstname = browser.find_element_by_name('firstname')
     firstname.send_keys('Tri')
@@ -31,7 +47,7 @@ def clickCheckout(browser):
     lastname.send_keys('Pham')
     #email
     email = browser.find_element_by_name('email')
-    email.send_keys('@gmail.com')
+    email.send_keys(email)
     #fone
     phonenumber = browser.find_element_by_name('phonenumber')
     phonenumber.send_keys('773122123')
@@ -49,10 +65,10 @@ def clickCheckout(browser):
     postcode.send_keys('700000')
     #Password
     password = browser.find_element_by_name('password')
-    password.send_keys('')
+    password.send_keys(password)
     #Repeat pw
     password2 = browser.find_element_by_name('password2')
-    password2.send_keys('')
+    password2.send_keys(password)
     #Optional company
     companyname = browser.find_element_by_name('companyname')
     companyname.send_keys('TMA')
@@ -62,10 +78,10 @@ def clickCheckout(browser):
     browser.maximize_window()
 
 def getKey():
-    browser = webdriver.Chrome(executable_path='./chromedriver_hex.exe', options=options)
+    browser = webdriver.Chrome(executable_path=DRIVER_LOCATION, options=options)
     while False == checkExistsCheckOut(browser):
         time.sleep(1)
-        result = browser.get('https://manage.pgsharp.com/cart.php?a=add&pid=2')
+        result = browser.get(PGS_URL)
     clickCheckout(browser)
 
 
