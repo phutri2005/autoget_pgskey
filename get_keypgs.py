@@ -12,11 +12,12 @@ import os
 import time
 
 # Set environment variables
-#os.environ['webdriver.chrome.driver'] = 'F:\chromedriver_win32_85\chromedriver.exe'
+#os.environ['webdriver.chrome.driver'] = 'F:\DevTools\chromedriver_win32_85\chromedriver.exe'
 options = webdriver.ChromeOptions()
 options.add_argument("--start-maximized")
-delay = 5 #seconds
+delay = 10 #seconds
 DRIVER_LOCATION = './chromedriver_hex.exe'
+OPERA_DRIVER_LOCATION = './operadriver.exe'
 PGS_URL = 'https://manage.pgsharp.com/cart.php?a=add&pid=2'
 email_String = '@gmail.com'
 password_String = ''
@@ -77,12 +78,25 @@ def clickCheckout(browser):
     browser.minimize_window()
     browser.maximize_window()
 
+def getWebDriver(driverLocation):
+    if OPERA_DRIVER_LOCATION == driverLocation:
+        print('Create Opera web driver')       
+        return webdriver.Opera(executable_path=driverLocation, options=options)
+    else:
+        print('Create Chrome web driver')   
+        return webdriver.Chrome(executable_path=DRIVER_LOCATION, options=options)
+
 def getKey():
-    browser = webdriver.Chrome(executable_path=DRIVER_LOCATION, options=options)
-    while False == checkExistsCheckOut(browser):
-        time.sleep(1)
-        result = browser.get(PGS_URL)
-    clickCheckout(browser)
+    try:
+        browser = getWebDriver(OPERA_DRIVER_LOCATION)
+        while False == checkExistsCheckOut(browser):
+            time.sleep(1)
+            result = browser.get(PGS_URL)
+        clickCheckout(browser)
+    except Exception as inst:
+        print('Error. Retrying!!!')
+        print(inst)
+        getKey()
 
 
 #Go go go
