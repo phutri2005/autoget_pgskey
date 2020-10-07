@@ -10,11 +10,14 @@ from selenium.common.exceptions import TimeoutException
 
 import os
 import time
+from datetime import datetime
+
 
 # Set environment variables
-#os.environ['webdriver.chrome.driver'] = 'F:\DevTools\chromedriver_win32_85\chromedriver.exe'
+#os.environ['webdriver.chrome.driver'] = './chromedriver.exe'
 options = webdriver.ChromeOptions()
 options.add_argument("--start-maximized")
+#options.add_argument("--headless") 
 delay = 10 #seconds
 DRIVER_LOCATION = './chromedriver_hex.exe'
 OPERA_DRIVER_LOCATION = './operadriver.exe'
@@ -30,6 +33,12 @@ def checkExistsCheckOut(browser):
         return False
     return True
 
+def screenshot(outputFile, browser):
+    now = datetime.now()
+    current_time = now.strftime("%H_%M_%S")
+    print("Current Time =", current_time)
+    browser.save_screenshot('F:\pgs_screenshot\\' + current_time + '_' + outputFile)
+
 def clickCheckout(browser):
     #ActionChains(browser).click(browser.find_element_by_xpath('//*[@id="checkout"]')).perform()
     #browser.find_element_by_link_text('Checkout').click()
@@ -40,6 +49,8 @@ def clickCheckout(browser):
         print("Checkout page is ready!")
     except TimeoutException:
         print("Load checkout page took too long")
+
+    screenshot('0.png', browser)
     #firstname
     firstname = browser.find_element_by_name('firstname')
     firstname.send_keys('Tri')
@@ -73,6 +84,16 @@ def clickCheckout(browser):
     #Optional company
     companyname = browser.find_element_by_name('companyname')
     companyname.send_keys('TMA')
+    #btnCompleteOrder
+    print('Click complete button')
+    #browser.find_element_by_id('btnCompleteOrder').click()
+
+    screenshot('1.png', browser)
+
+    #browser.find_element_by_id('btnCompleteOrder').click()
+
+    #screenshot('2.png', browser)
+
     #Focus to window
     browser.switch_to.window(browser.current_window_handle)
     browser.minimize_window()
@@ -88,7 +109,7 @@ def getWebDriver(driverLocation):
 
 def getKey():
     try:
-        browser = getWebDriver(OPERA_DRIVER_LOCATION)
+        browser = getWebDriver(DRIVER_LOCATION)
         while False == checkExistsCheckOut(browser):
             time.sleep(1)
             result = browser.get(PGS_URL)
@@ -97,10 +118,21 @@ def getKey():
         print('Error. Retrying!!!')
         print(inst)
         getKey()
+    finally:
+        browser.close()
 
+def make_screenshot(driver, url, output):
+    if not url.startswith('http'):
+        raise Exception('URLs need to start with "http"')
+
+    driver = webdriver.Chrome(
+        executable_path=CHROMEDRIVER_PATH,
+        chrome_options=chrome_options
+    )  
+    driver.get(url)
+    driver.save_screenshot(output)
+    driver.close()
 
 #Go go go
-getKey()
-
-
-
+if __name__ == "__main__":
+    getKey()
