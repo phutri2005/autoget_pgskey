@@ -14,14 +14,23 @@ from datetime import datetime
 
 
 # Set environment variables
-#os.environ['webdriver.chrome.driver'] = './chromedriver.exe'
+#os.environ['webdriver.chrome.driver'] = 'F:\DevTools\chromedriver_win32_85\chromedriver.exe'
 options = webdriver.ChromeOptions()
 options.add_argument("--start-maximized")
-#options.add_argument("--headless") 
+# Enable 
+#options.add_argument("--headless")
+# Avoid detect automation options
+options.add_experimental_option('useAutomationExtension', False)
+options.add_experimental_option("excludeSwitches", ["enable-automation"])
+options.add_argument("--disable-blink-features")
+options.add_argument("--disable-blink-features=AutomationControlled")
+
 delay = 10 #seconds
 DRIVER_LOCATION = './chromedriver_hex.exe'
 OPERA_DRIVER_LOCATION = './operadriver.exe'
 PGS_URL = 'https://manage.pgsharp.com/cart.php?a=add&pid=2'
+
+# [IMPORTANT] Update this with your info
 email_String = '@gmail.com'
 password_String = ''
 
@@ -35,9 +44,9 @@ def checkExistsCheckOut(browser):
 
 def screenshot(outputFile, browser):
     now = datetime.now()
-    current_time = now.strftime("%H_%M_%S")
+    current_time = now.strftime("%m_%d_%H_%M_%S_%f")
     print("Current Time =", current_time)
-    browser.save_screenshot('F:\pgs_screenshot\\' + current_time + '_' + outputFile)
+    #browser.save_screenshot('F:\pgs_screenshot\\' + current_time + '_' + outputFile)
 
 def clickCheckout(browser):
     #ActionChains(browser).click(browser.find_element_by_xpath('//*[@id="checkout"]')).perform()
@@ -85,7 +94,7 @@ def clickCheckout(browser):
     companyname = browser.find_element_by_name('companyname')
     companyname.send_keys('TMA')
     #btnCompleteOrder
-    print('Click complete button')
+    #print('Click complete button')
     #browser.find_element_by_id('btnCompleteOrder').click()
 
     screenshot('1.png', browser)
@@ -110,16 +119,20 @@ def getWebDriver(driverLocation):
 def getKey():
     try:
         browser = getWebDriver(DRIVER_LOCATION)
+        browser.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+        browser.execute_cdp_cmd('Network.setUserAgentOverride', {"userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.53 Safari/537.36'})
+        print(browser.execute_script("return navigator.userAgent;"))
+
         while False == checkExistsCheckOut(browser):
             time.sleep(1)
             result = browser.get(PGS_URL)
         clickCheckout(browser)
     except Exception as inst:
-        print('Error. Retrying!!!')
-        print(inst)
+        print('Error. Retrying!!!', inst)
         getKey()
-    finally:
-        browser.close()
+    #finally:
+        #print("Finished!")
+        #browser.close()
 
 def make_screenshot(driver, url, output):
     if not url.startswith('http'):
@@ -131,7 +144,7 @@ def make_screenshot(driver, url, output):
     )  
     driver.get(url)
     driver.save_screenshot(output)
-    driver.close()
+    #driver.close()
 
 #Go go go
 if __name__ == "__main__":
